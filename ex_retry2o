@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <unistd.h>
+
+//This is the best way to learn: building the muscle memory. Here is your first exercise. We will call it "The Hand-Off." It’s the simplest possible version of a pipeline.
+
+//The Problem: "The Secret Number"
+//Thread A (The Creator): Will pick a secret number (like 42) and save it in a global variable.
+//Thread B (The Messenger): Must wait for Thread A to finish, then read that number and print: "The secret number is: [X]".
+//Constraint: You must use a Semaphore to make sure Thread B doesn't try to print the number before Thread A has actually set it.
+
+//Your Logic Tasks:
+//Inside creator_func: Set the variable and "ring the bell" (Signal/Post).
+//Inside messenger_func: "Listen for the bell" (Wait) and then print.
+//Inside main: Use the "Start Buttons" (create) and "Wait Buttons" (join).
+//Critical Thinking Question for you:
+//If you forgot to use the Semaphore, and the OS decided to run Thread B before Thread A, what would the output be?
+
+//Try to fill in those tasks. If you get stuck on a specific line of code, ask me and I'll explain just that line!
+// --- GLOBAL KITCHEN (Shared Memory) ---
+
+int secret_number = 0;
+sem_t data_ready; // The traffic light
+
+
+void* update(void* arg)
+{
+    secret_number = 42; 
+    sem_post(&s);
+    return NULL; 
+}
+
+void* message(void* arg)
+{
+    sem_wait(&s);
+    printf("The updated number is %d", secret_number);
+    return NULL; 
+}
+
+int main()
+{
+    pthread_t A, B; 
+
+    sem_init(&data_ready, 0, 0)
+
+
+    // TASK 6: Create both threads
+    // Hint: pthread_create(&id, NULL, func, NULL);
+    pthread_create(&A, NULL, update, NULL);
+    pthread_create(&B, NUll, message, NULL);
+
+     // --- SYNCHRONIZATION ---
+    // TASK 7: Join both threads so main doesn't exit early
+    // Hint: pthread_join(id, NULL);
+
+    pthread_join(A, NULL);
+    pthread_join(B, NULL);
+
+    sem_destroy(&data_ready);
+
+}
