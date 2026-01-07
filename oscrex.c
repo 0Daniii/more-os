@@ -9,7 +9,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-int v[1000]; //we assume the file has less than 1000 numbers 
+int v[1000];  
 
 int main(int argc, char *argv[])
 {
@@ -29,12 +29,12 @@ for (int k = 0; k < num_threads; k++) {
     int start = k * chunk;
     int end = (k + 1) * chunk - 1;
 
-    // Special case: The last thread takes everything until the very end
+    
     if (k == num_threads - 1) {
         end = total_numbers - 1;
     }
     
-    // Now you put 'start' and 'end' into the suitcase and call pthread_create
+   
 }
 
 
