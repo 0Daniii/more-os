@@ -1,0 +1,35 @@
+Intermediate: The Basics of pipe()
+
+The Basic Tube: Create a pipe, write the integer 100 into it, and read it back in the same process.
+
+One-Way Talk: Create a pipe, fork(), and have the parent send the character 'A' to the child.
+
+The Secret Message: Parent sends a string "OS is fun" to the child. Child prints it.
+
+Close the Mouth: Write a program where the child tries to read from a pipe, but the parent closes the write-end without sending anything. Observe what happens to read().
+
+The Broken Pipe: Have the child close the read-end, and then have the parent try to write to it. (Research what SIGPIPE is).
+
+Array Transfer: Parent creates an array of 5 integers {1, 2, 3, 4, 5} and sends the whole array through a pipe to the child.
+
+Simple Math: Parent sends two integers to the child. Child adds them and prints the result.
+
+Advanced: Redirection and Logic (dup2 & exec)
+
+The Hijack: Use dup2 to redirect printf (STDOUT) into a file named output.txt.
+
+Pipe Redirection: Create a pipe, use dup2 to connect the write-end to STDOUT. Then call printf("Hello Pipe"). Have the child read it.
+
+The Command Runner: Parent forks. Child uses execlp to run the ls command.
+
+The Filter: Create a pipe. Parent runs ls (via execlp) and redirects output to the pipe. Child reads the output of ls from the pipe and counts how many files were listed.
+
+The Two-Way Street: Create two pipes. Parent sends a number to Child on Pipe A. Child multiplies it by 10 and sends it back to Parent on Pipe B.
+
+The Boss Level: Recreate the command ls | wc -l in C.
+
+Parent forks.
+
+Child 1 redirects STDOUT to a pipe and runs ls.
+
+Child 2 (or Parent) redirects STDIN from that same pipe and runs wc -l.
