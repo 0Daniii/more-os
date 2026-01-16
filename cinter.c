@@ -19,9 +19,9 @@ Pipe Redirection: Create a pipe, use dup2 to connect the write-end to STDOUT. Th
 The Command Runner: Parent forks. Child uses execlp to run the ls command.
 
 The Filter: Create a pipe. Parent runs ls (via execlp) and redirects output to the pipe. Child reads the output of ls from the pipe and counts how many files were listed.
-
+done
 The Two-Way Street: Create two pipes. Parent sends a number to Child on Pipe A. Child multiplies it by 10 and sends it back to Parent on Pipe B.
-
+done 
 The Boss Level: Recreate the command ls | wc -l in C.
 
 Parent forks.
@@ -77,7 +77,7 @@ Child 2 (or Parent) redirects STDIN from that same pipe and runs wc -l.*/
     }
 }*/
 
-int main()
+/*int main()
 {
     int pipe12[2];
     pipe(pipe12);
@@ -103,5 +103,69 @@ for(unsigned long i = 0; i < strlen(a); i++) {
         close(pipe12[0]);
         dup2(pipe12[1], 1);
         execlp("ls", "ls", NULL, NULL);
+    }
+}
+*/
+
+
+/*int main() 
+
+{
+    int pipe12[2];
+    int pipe21[2];
+    pipe(pipe12);
+    pipe(pipe21);
+    pid_t pid = fork();
+
+    if(pid == 0){
+     close(pipe12[1]);
+        close(pipe21[0]);
+        long int n[2];
+
+        read(pipe12[0], &n,sizeof(n));
+        n[0] = n[0] *10;
+        n[1] = getpid();
+
+        write(pipe21[1], &n, sizeof(n));
+
+        
+
+    }
+    else
+    {
+        close(pipe12[0]);
+        close(pipe21[1]);
+        long int n[2];
+        n[0] = 20; // secret number
+        printf("%d is the original number holded by parent PPID %d\n",n[0], getpid());
+        long int sec[2];
+            write(pipe12[1], &n, sizeof(n));
+
+            read(pipe21[0], &sec, sizeof(sec));
+            printf("This is parent, got number %ld from child process %ld", sec[0], sec[1]);
+    }
+}*/
+
+
+int main() 
+
+{
+    int pipe12[2];
+    pipe(pipe12);
+
+    pid_t pid = fork();
+
+    if(pid == 0){
+   close(pipe12[1]);
+          dup2(pipe12[0], 0);
+  
+   execlp("wc", "wc", "-l", NULL );
+
+    }
+    else
+    {
+        close(pipe12[0]);
+        dup2(pipe12[1], 1);
+        execlp("ls", "ls", NULL);
     }
 }
